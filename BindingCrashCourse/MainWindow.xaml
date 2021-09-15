@@ -1,0 +1,131 @@
+﻿<Window x:Class="BindingCrashCourse.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BindingCrashCourse"
+        xmlns:viewModels="clr-namespace:BindingCrashCourse.MVVM.ViewModels"
+        mc:Ignorable="d"
+        MinHeight="500"
+        MinWidth="800"
+        Title="MainWindow" 
+        Height="500"
+        Background="PaleVioletRed"
+        Width="800">
+
+    <!--Sets the DataContext property to a new instance of our ViewModel class, BindingPlayGroundViewModel-->
+    <Window.DataContext>
+        <viewModels:BindingPlayGroundViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <!--Start Of Grid Definitions-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <!--End Of Grid Definitions-->
+
+        <!--Start of TreeView Example-->
+        <TextBlock Grid.Row="0" 
+                   VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Text="TreeView Binding Sample"/>
+        <TreeView Name="GroupView" 
+                  Grid.Row="1" 
+                  ItemsSource="{Binding HierarchicalDataSource}"
+                  Background="Pink">
+            <TreeView.Resources>
+                <!--The Hierarchical Data Template Recursively Runs Through the TreeObject and fills the treeview-->
+                <HierarchicalDataTemplate DataType="{x:Type local:TreeObject}"  
+                                          ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Path=NodeName}" />
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <!--End of TreeView Example-->
+
+        <!--Start Of ListBox Binding Sample-->
+        <TextBlock Grid.Row="2" 
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   Background="PaleVioletRed"
+                   Text="ListBox Binding Sample"/>
+        <!--OneWay Binding is used on the listbox, meaning the ListBox can read the Property RandomInt, but not write it.-->
+        <ListBox Grid.Row="3" 
+                 Grid.ColumnSpan="1" 
+                 Background="Pink"
+                 ItemsSource="{Binding RandomInts, Mode=OneWay}"/>
+        <Button Click="Click_GenerateRandomInts"
+                Background="PaleVioletRed"
+                Grid.Row="3" 
+                Grid.Column="1"
+                Content="Random Integers"/>
+        <!--End Of ListBox Binding Sample-->
+
+        <!--Start Of TextBlock/TextBox Binding Sample-->
+        <TextBlock Grid.Row="4"
+                   Grid.Column="0" 
+                   VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Background="PaleVioletRed"
+                   Text="TextBox and TextBlock Binding Example"/>
+        <Grid Grid.Row="5" 
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="126*"/>
+                <ColumnDefinition Width="561*"/>
+                <ColumnDefinition Width="126*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Background="PaleVioletRed"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Text="TextBlock"
+                       TextAlignment="Center"/>
+            <TextBlock Background="PaleVioletRed"
+                       Grid.Column="0"                       
+                       Text="TextBox"
+                       TextAlignment="Center" Margin="0,32,0,0" Grid.RowSpan="2"/>
+            <!--One Way Binding is used again to bind a string to the TextBlock, both getting the value and keeping it updated from the variable-->
+            <TextBlock Grid.Row="0"
+                       Grid.Column="1"
+                       TextAlignment="Center" 
+                       Background="Pink"
+                       Text="{Binding JustAString, Mode=OneWay}"/>
+            <!--TwoWay binding is used on the TextBox in order to allow Read/Write access on the property JustAString-->
+            <!--Additionally UpdateSourceTrigger is set to PropertyChanged, meaning that every you edit the value in the TextBox PropertyChanged will be called,-->
+            <!--that lets the window know to update other GUI elements bound to JustAString, in this example the TextBlock is affected.-->
+            <TextBox
+                     Grid.Column="1"
+                     TextAlignment="Center"
+                     Background="Pink"
+                     Text="{Binding JustAString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,32,0,0" Grid.RowSpan="2"/>
+            <Button Click="Click_GenerateRandomInt"
+                Background="PaleVioletRed"
+                Grid.Row="0"
+                Grid.Column="2"
+                Content="Generate Random Int"/>
+            <Button Click="Click_PrintJustAString"
+                Background="PaleVioletRed"
+                Grid.Row="1"
+                Grid.Column="2"
+                Content="Print JustAString"/>
+        </Grid>
+        <!--End Of TextBlock/TextBox Binding Sample-->
+    </Grid>
+</Window>
